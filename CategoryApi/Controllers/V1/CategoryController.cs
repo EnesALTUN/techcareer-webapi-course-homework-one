@@ -5,20 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProductApi.Controllers
+namespace CategoryApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class CategoryController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<ProductController> _logger;
+        private readonly ILogger<CategoryController> _logger;
 
-        public ProductController(ILogger<ProductController> logger)
+        public CategoryController(ILogger<CategoryController> logger)
         {
             _logger = logger;
         }
