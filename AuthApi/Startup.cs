@@ -1,14 +1,11 @@
+using AuthApi.Infrastructure;
+using AuthApi.Models;
+using Core.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AuthApi
 {
@@ -26,6 +23,10 @@ namespace AuthApi
         {
 
             services.AddControllers();
+
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+
+            services.AddTransient<IJwtAuthenticationManager, JwtAuthenticationManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

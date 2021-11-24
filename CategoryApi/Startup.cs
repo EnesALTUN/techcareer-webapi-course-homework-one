@@ -5,12 +5,10 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace CategoryApi
 {
@@ -26,15 +24,35 @@ namespace CategoryApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            SymmetricSecurityKey signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Security"]));
+            string authenticationProviderKey = "Bearer";
+
+            services.AddAuthentication(option => option.DefaultAuthenticateScheme = authenticationProviderKey)
+                .AddJwtBearer(authenticationProviderKey, options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = signInKey,
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["JwtSettings:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["JwtSettings:Audience"],
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        RequireExpirationTime = true
+                    };
+                });
 
             services.AddControllers();
 
             services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);                   // Varsayýlan API versiyonu
-                options.ReportApiVersions = true;                                   // API' a atýlan istek sonucunda desteklenen API versiyonlarý dönsün mü?
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ApiVersionReader = new HeaderApiVersionReader("version");   // Header üzerinden versiyon bilgisini "version" üzerinden al
+                options.ApiVersionReader = new HeaderApiVersionReader("version");
             });
 
             services.AddSwaggerGen(c =>
@@ -54,6 +72,8 @@ namespace CategoryApi
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

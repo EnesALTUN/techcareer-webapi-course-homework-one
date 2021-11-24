@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AuthApi.Infrastructure;
+using AuthApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthApi.Controllers
 {
@@ -11,29 +8,21 @@ namespace AuthApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private readonly IJwtAuthenticationManager _jwtAuthenticationManager;
+        public AuthController(IJwtAuthenticationManager jwtAuthenticationManager)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<AuthController> _logger;
-
-        public AuthController(ILogger<AuthController> logger)
-        {
-            _logger = logger;
+            _jwtAuthenticationManager = jwtAuthenticationManager;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IActionResult Login(UserCredential user)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if (user.Email.Equals("ensalt_1998@hotmail.com") && user.Password.Equals("123"))
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return Ok(_jwtAuthenticationManager.TokenHandler(user.Email));
+            }
+            else
+                return Unauthorized();
         }
     }
 }

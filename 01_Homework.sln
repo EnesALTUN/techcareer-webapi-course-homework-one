@@ -19,13 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CategoryService", "Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "Services\ProductService\ProductService.csproj", "{59BD56F1-7B85-4655-AB25-BDE373EBACA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{3AE0A4D3-9527-464B-BA94-6BF7186755B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{3AE0A4D3-9527-464B-BA94-6BF7186755B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthApi", "AuthApi\AuthApi.csproj", "{1D3E3CA2-2EF0-4117-81F1-B9397514E758}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthApi", "AuthApi\AuthApi.csproj", "{1D3E3CA2-2EF0-4117-81F1-B9397514E758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CategoryApi", "CategoryApi\CategoryApi.csproj", "{107AB9E8-4535-4BF5-A4CA-16C17EED0704}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CategoryApi", "CategoryApi\CategoryApi.csproj", "{107AB9E8-4535-4BF5-A4CA-16C17EED0704}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductApi", "ProductApi\ProductApi.csproj", "{EB72D828-A1DE-4A25-AD8C-AD7671B68FC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductApi", "ProductApi\ProductApi.csproj", "{EB72D828-A1DE-4A25-AD8C-AD7671B68FC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
