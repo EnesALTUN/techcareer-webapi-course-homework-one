@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Data.Model
+namespace Data
 {
     public partial class HomeworkDbContext : DbContext
     {
