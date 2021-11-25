@@ -1,6 +1,8 @@
 ﻿using CategoryService.Infrastructure;
+using Core;
 using Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,15 +23,19 @@ namespace CategoryApi.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Category>> GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            return await _categoryService.GetAllCategoryAsync();
+            List<Category> categories = await _categoryService.GetAllCategoryAsync();
+
+            return Ok(new ApiReturn<List<Category>>{ Success = true, Code = StatusCodes.Status200OK, Data = categories, Message = "All Categories", InternalMessage = "Get All Categories" });
         }
 
         [HttpGet("{CategoryId}")]
-        public async Task<Category> GetCategory(int CategoryId)
+        public async Task<IActionResult> GetCategory(int CategoryId)
         {
-            return await _categoryService.GetByCategoryIdAsync(CategoryId);
+            Category category = await _categoryService.GetByCategoryIdAsync(CategoryId);
+
+            return Ok(new ApiReturn<Category> { Success = true, Code = StatusCodes.Status200OK, Data = category, Message = "Category", InternalMessage = "Get Category" });
         }
 
         [HttpPost]

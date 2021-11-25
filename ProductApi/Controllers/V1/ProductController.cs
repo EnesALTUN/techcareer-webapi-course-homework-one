@@ -1,5 +1,7 @@
-﻿using Entities;
+﻿using Core;
+using Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Infrastructure;
 using System.Collections.Generic;
@@ -21,15 +23,19 @@ namespace ProductApi.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Product>> GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            return await _productService.GetAllProductAsync();
+            List<Product> products = await _productService.GetAllProductAsync();
+
+            return Ok(new ApiReturn<List<Product>> { Success = true, Code = StatusCodes.Status200OK, Data = products, Message = "All Products", InternalMessage = "Get All Products" });
         }
 
         [HttpGet("{ProductId}")]
-        public async Task<Product> GetProduct(int ProductId)
+        public async Task<IActionResult> GetProduct(int ProductId)
         {
-            return await _productService.GetByProductIdAsync(ProductId);
+            Product product = await _productService.GetByProductIdAsync(ProductId);
+
+            return Ok(new ApiReturn<Product> { Success = true, Code = StatusCodes.Status200OK, Data = product, Message = "Product", InternalMessage = "Get Product" });
         }
 
         [HttpPost]
@@ -60,14 +66,16 @@ namespace ProductApi.V1.Controllers
         }
 
         [HttpGet("Category/{CategoryId}")]
-        public async Task<List<Product>> GetProductWithCategoryId(int CategoryId)
+        public async Task<IActionResult> GetProductWithCategoryId(int CategoryId)
         {
             if (CategoryId.Equals(null))
                 return null;
 
-            return await _productService.GetProductWithCriteriaAllAsync(
+            List<Product> getProductsWithCategoryId = await _productService.GetProductWithCriteriaAllAsync(
                     filter => filter.CategoryId.Equals(CategoryId)
                 );
+
+            return Ok(new ApiReturn<List<Product>> { Success = true, Code = StatusCodes.Status200OK, Data = getProductsWithCategoryId, Message = "Product With CategoryId", InternalMessage = "Get Product With CategoryId" });
         }
     }
 }
