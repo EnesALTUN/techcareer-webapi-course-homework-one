@@ -24,6 +24,29 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/{version}/product/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5311
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/product/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/{version}/category",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
