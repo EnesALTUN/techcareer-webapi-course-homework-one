@@ -50,6 +50,16 @@ namespace Repository
             return await table.Where(filterExpression).FirstOrDefaultAsync();
         }
 
+        public List<TEntity> GetWithCriteriaAll(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return table.Where(filterExpression).ToList();
+        }
+
+        public async Task<List<TEntity>> GetWithCriteriaAllAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return await table.Where(filterExpression).ToListAsync();
+        }
+
         public void Insert(TEntity obj)
         {
             table.Add(obj);

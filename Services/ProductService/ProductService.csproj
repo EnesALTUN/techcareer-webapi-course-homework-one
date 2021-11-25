@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Library\Entities\Entities.csproj" />
+    <ProjectReference Include="..\..\Library\Repository\Repository.csproj" />
+  </ItemGroup>
+
 </Project>

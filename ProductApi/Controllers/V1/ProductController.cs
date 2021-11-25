@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+using ProductService.Infrastructure;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProductApi.V1.Controllers
 {
@@ -13,29 +13,61 @@ namespace ProductApi.V1.Controllers
     [Authorize]
     public class ProductController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly IProductService _productService;
 
-        private readonly ILogger<ProductController> _logger;
-
-        public ProductController(ILogger<ProductController> logger)
+        public ProductController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<List<Product>> GetProducts()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return await _productService.GetAllProductAsync();
+        }
+
+        [HttpGet("{ProductId}")]
+        public async Task<Product> GetProduct(int ProductId)
+        {
+            return await _productService.GetByProductIdAsync(ProductId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(Product product)
+        {
+            Product addedProduct = await _productService.AddProductAsync(product);
+
+            return CreatedAtAction("GetProduct", "Product", new { ProductId = product.ProductId }, addedProduct);
+        }
+
+        [HttpDelete("{ProductId}")]
+        public async Task<IActionResult> DeleteProduct(int ProductId)
+        {
+            await _productService.DeleteProductAsync(ProductId);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult UpdateProduct(Product product)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            _productService.UpdateProduct(product);
+
+            return Ok();
+        }
+
+        [HttpGet("Category/{CategoryId}")]
+        public async Task<List<Product>> GetProductWithCategoryId(int CategoryId)
+        {
+            if (CategoryId.Equals(null))
+                return null;
+
+            return await _productService.GetProductWithCriteriaAllAsync(
+                    filter => filter.CategoryId.Equals(CategoryId)
+                );
         }
     }
 }

@@ -1,12 +1,18 @@
+using Data;
+using Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProductService.Infrastructure;
+using Repository;
+using Repository.Infrastructure;
 using System;
 using System.Text;
 
@@ -54,6 +60,15 @@ namespace ProductApi
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ApiVersionReader = new HeaderApiVersionReader("version");
             });
+
+            services.AddDbContext<HomeworkDbContext>(options =>
+            {
+                options.UseSqlServer("Server=.;Database=NORTHWND;Trusted_Connection=True");
+            });
+
+            services.AddScoped(typeof(IGenericRepository<Product>), typeof(GenericRepository<Product>));
+
+            services.AddTransient<IProductService, ProductService.ProductService>();
 
             services.AddSwaggerGen(c =>
             {
