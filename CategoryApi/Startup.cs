@@ -1,12 +1,18 @@
+using CategoryService.Infrastructure;
+using Data;
+using Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repository;
+using Repository.Infrastructure;
 using System;
 using System.Text;
 
@@ -54,6 +60,15 @@ namespace CategoryApi
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ApiVersionReader = new HeaderApiVersionReader("version");
             });
+
+            services.AddDbContext<HomeworkDbContext>(options =>
+            {
+                options.UseSqlServer("Server=.;Database=NORTHWND;Trusted_Connection=True");
+            });
+
+            services.AddScoped(typeof(IGenericRepository<Category>), typeof(GenericRepository<Category>));
+
+            services.AddTransient<ICategoryService, CategoryService.CategoryService>();
 
             services.AddSwaggerGen(c =>
             {

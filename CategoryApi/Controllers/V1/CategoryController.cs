@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CategoryService.Infrastructure;
+using Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace CategoryApi.V1.Controllers
 {
@@ -13,29 +13,31 @@ namespace CategoryApi.V1.Controllers
     [Authorize]
     public class CategoryController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ICategoryService _categoryService;
 
-        private readonly ILogger<CategoryController> _logger;
-
-        public CategoryController(ILogger<CategoryController> logger)
+        public CategoryController(ICategoryService categoryService)
         {
-            _logger = logger;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<List<Category>> GetCategories()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return await _categoryService.GetAllCategoryAsync();
+        }
+
+        [HttpGet("{CategoryId}")]
+        public async Task<Category> GetCategory(int CategoryId)
+        {
+            return await _categoryService.GetByCategoryIdAsync(CategoryId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(Category category)
+        {
+            Category addedCategory = await _categoryService.AddCategoryAsync(category);
+
+            return CreatedAtAction("GetCategory", "Category", new { CategoryId = category.CategoryId }, addedCategory);
         }
     }
 }
